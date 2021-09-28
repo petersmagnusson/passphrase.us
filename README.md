@@ -23,9 +23,14 @@ password/passphrase tools (*)
 * Truly free - no ads, promotions, hidden agendas.
 
 * Single file - one static file encapsulating
-  all the needed html, css, and javascript. Does not access
-  any libraries, external servers, nothing. Can be
-  (and is) served as a static object off a CDN.
+  all the needed html, css, and javascript. Does not use
+  any external libraries, etc.
+
+* Private - available to as many people as possible while
+  gathering as little information about you as possible. It is
+  served as a static CDN object, there is no web server per se.
+  When it runs it doesn't touch any other servers.
+  In fact you can download and run it locally. (**)
 
 * A source of entropy other than the browser - the
   Crypto.getRandomValues() in modern browsers should be cryptographically
@@ -44,3 +49,9 @@ Institute, and distributed as open source under the MIT license.
 Comments and suggestions welcome.
 
 (*) At least any that we could find
+
+(**) Even on your phone - and yes, even on your iPhone: go to
+https://magnusson-institute.github.io/passphrase.us/ and "share" it to
+a "web archive" and store it in your local (Files) storage. Then
+various apps can open this locally (needs to be able to run
+Javascript), such as GoodReader (no affiliation).
