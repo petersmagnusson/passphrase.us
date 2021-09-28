@@ -41,4 +41,6 @@ password/passphrase tools (*)
 The development is currently funded and hosted by the Magnusson
 Institute, and distributed as open source under the MIT license.
 
+Comments and suggestions welcome.
+
 (*) At least any that we could find
