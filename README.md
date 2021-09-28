@@ -1,16 +1,15 @@
 # passphrase.us
 
-(Yet Another) Random password/passphrase generator
+(Yet Another) Random Password/Passphrase Generator
 
 You can run it off Github:
 
 https://magnusson-institute.github.io/passphrase.us/
 
-It should also be served (redirected) from here:
+It should also be working here:
 
 https://passphrase.us
 
-(This will redirect to a _static_ copy on the MI CDN)
 
 
 ## Philosophy
@@ -26,6 +25,9 @@ password/passphrase tools (*)
   all the needed html, css, and javascript. Does not use
   any external libraries, etc.
 
+* Up-to-date - using latest cryptography and "best practice",
+  to the best of our knowledge. Comments and critiques welcome.
+
 * Private - available to as many people as possible while
   gathering as little information about you as possible. It is
   served as a static CDN object, there is no web server per se.
@@ -35,10 +37,11 @@ password/passphrase tools (*)
 * A source of entropy other than the browser - the
   Crypto.getRandomValues() in modern browsers should be cryptographically
   strong, but that's not something a user can easily verify.
-  We add "physical" entropy from the user (finger or mouse movement).
+  We add "physical" entropy from the user (finger or mouse movement),
+  so there are two distinct sources of randomness.
 
 * Simple characterization of how "secure" a password is,
-  with user choices kept as simple as possible.
+  with user choices kept as simple as possible (but not too simple).
 
 * Careful explanation of choices and design - we've tried to
   be detailed (in the source code).
