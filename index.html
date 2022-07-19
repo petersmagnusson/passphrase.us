@@ -341,7 +341,7 @@
 	       -webkit-appearance: none;
 	       width: 100%;
 	       height: 25px;
-	       background: #d3d3d3;
+	       background: #f1f2f2;
 	       outline: none;
 	       opacity: 0.7;
 	       -webkit-transition: .2s;
@@ -355,13 +355,13 @@
 	       appearance: none;
 	       width: 25px;
 	       height: 25px;
-	       background: #04AA6D;
+	       background: #ff5c42;
 	       cursor: pointer;
 	   }
 	   .slider::-moz-range-thumb {
 	       width: 25px;
 	       height: 25px;
-	       background: #04AA6D;
+	       background: #ff5c42;
 	       cursor: pointer;
 	   }
     </style>
@@ -420,9 +420,9 @@
 	  <hr>
 
 	  <p>
-	    <label for="Entropy">Move slider to change strength of your password (entropy)</label><br/>
-	    <input type="range" name="entropy" id="entropy" min="20" max="160" step="1" value="40" class="slider">
-	    <output class="entropy-output" for="entropy"></output>
+	    <label for="Entropy" id="entropy_explanation">Move slider to change strength of your password (entropy)</label><br/>
+	    <input type="range" name="entropy" id="entropy" min="24" max="160" step="1" value="40" class="slider"><br/>
+	    <i><output class="entropy-output" for="entropy"></output> bits</i>
 	  </p>
 
 	  <p><em>
@@ -495,13 +495,42 @@
     </table> 
 
     <script>
+      let entropy_choice = 1;
+      let entropy_description = [
+	  /* 0 */ [24, 33, "24-30 bits: Acceptable for non-critical online services"],
+	  /* 1 */ [34, 46, "35-45 bits: Acceptable for online services, including important ones"],
+	  /* 2 */ [47, 56, "48-52 bits: Balanced choice for most uses"],
+	  /* 3 */ [57, 69, "60-65 bits: Strong"],
+	  /* 4 */ [70, 99, "75-90 bits: Very Strong"],
+	  /* 5 */ [100, 160, "120 bits and above: Probably overkill"]
+      ];
 
       // manage slider
       const entropy = document.querySelector('#entropy');
       const output = document.querySelector('.entropy-output');
       output.textContent = entropy.value;
+      let current_entropy = entropy.value | 0;
+      
+      document.getElementById("entropy_explanation").innerHTML = entropy_description[entropy_choice][2];
+
       entropy.addEventListener('input', function() {
-	  output.textContent = entropy.value;
+	  var t = entropy.value;
+	  var t0 = entropy_choice;
+	  output.textContent = t;
+	  while (t < entropy_description[t0][0]) {
+	      t0--;
+	  }
+	  while (t > entropy_description[t0][1]) {
+	      t0++;
+	  }
+	  if (t0 != entropy_choice) {
+	      document.getElementById("entropy_explanation").innerHTML = entropy_description[t0][2];
+	      entropy_choice = t0;
+	  }
+	  if (current_entropy != entropy.value | 0) {
+	      current_entropy = entropy.value | 0;
+	      generate(true);
+	  }
       });
 
       primelist=[2,3,5,7,11]
@@ -513,7 +542,6 @@
       lasttime=0
       randomlist=[]
       passwords=[]
-
 
       // NOTE: we began adding a third source of entropy, by fetching
       //       from random.org, but ... that violates our design choice
@@ -679,10 +707,17 @@
 
       function generate(doit){
 	  if(seedcount<100) return;
+
 	  var numberofcodes=1*document.getElementById("numcodes").value
 
-	  var strlen32 = 1*document.getElementById("pwlen32").value;
-	  var strlen64 = 1*document.getElementById("pwlen64").value;
+	  // var strlen32 = 1*document.getElementById("pwlen32").value;
+	  var strlen32 = Math.ceil(current_entropy / 5.0);
+
+	  // var strlen64 = 1*document.getElementById("pwlen64").value;
+	  var strlen64 = Math.ceil(current_entropy / 6.0);
+
+	  // var wordCount=1*document.getElementById("phraseLength").value;
+	  var wordCount = Math.ceil(current_entropy / (Math.log(6**5)/Math.log(2)));
 
 	  var pw = "";
 
@@ -708,10 +743,9 @@
 		  // size of our dictionary
 		  const words_N = words.length;
 		  var phrase = "";
-		  var wordCount=1*document.getElementById("phraseLength").value
 		  for(var b=0; b<wordCount; b++) {
 		      var n = rndNNN(words_N);
-		      phrase += words[n]+"&nbsp;";
+		      phrase += words[n]+" ";
 		  }
 		  htmlstructure2+=`<span class='password'>${phrase}</span>`;
 
