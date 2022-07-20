@@ -677,7 +677,8 @@
       let limit_verify = 0;
       function verifyMustRules(candidatePW, omit_symbols) {
 	  limit_verify ++;
-	  if (limit_verify > 5000) {
+	  if (limit_verify > 500) {
+	      location.reload(true);
 	      throw 'there is a bug ... verifyMustRules() should not be called this much ...';
 	  }
 	  var mustuse=[];
