@@ -319,28 +319,57 @@
 	  background-color:yellow;
 	  font-size:80%;
 	  font-feature-settings: "zero";
-      }
-      .character {
-	  font-family: "Monaco", /* Mac */
-		       "Consolas", /* Windows and sometimes Mac */
-		       "Andale Mono", /* Mac */
-		       "Lucida Console", /* Windows */
-		       "Dekar Regular", /* Android */
-		       "Menlo", /* iOS */
-		       monospace;
-	  font-size:80%;
-	  background-color:yellow;
-     }
-      body {
-	  height:100%;
-      }
-}
+	  }
+	   .character {
+	       font-family: "Monaco", /* Mac */
+			    "Consolas", /* Windows and sometimes Mac */
+			    "Andale Mono", /* Mac */
+			    "Lucida Console", /* Windows */
+			    "Dekar Regular", /* Android */
+			    "Menlo", /* iOS */
+			    monospace;
+	       font-size:80%;
+	       background-color:yellow;
+	   }
+	   body {
+	       height:100%;
+	   }
+	   .slidecontainer {
+	       width: 100%;
+	   }
+	   .slider {
+	       -webkit-appearance: none;
+	       width: 100%;
+	       height: 25px;
+	       background: #f1f2f2;
+	       outline: none;
+	       opacity: 0.7;
+	       -webkit-transition: .2s;
+	       transition: opacity .2s;
+	   }
+	   .slider:hover {
+	       opacity: 1;
+	   }
+	   .slider::-webkit-slider-thumb {
+	       -webkit-appearance: none;
+	       appearance: none;
+	       width: 25px;
+	       height: 25px;
+	       background: #ff5c42;
+	       cursor: pointer;
+	   }
+	   .slider::-moz-range-thumb {
+	       width: 25px;
+	       height: 25px;
+	       background: #ff5c42;
+	       cursor: pointer;
+	   }
     </style>
   </head>
   <body onmousemove="rndseed(event)" onkeydown="rndseed(event)" onkeyup="rndseed(event)" ontouchmove="rndseedt(event)">
     <noscript><p style="text-align:center;color:red;">We need Javascript - but we're not talking to any other servers!</p></noscript>
-    <p><br/></p>
-    <p><br/></p>
+   
+    <p></p>
     <table style="margin:auto;">
       <div style="margin:auto;width:350px;text-align:center;">
 	
@@ -362,22 +391,19 @@
 	  <p><em>
 	      We recommend you use the above password(s). They
 	      contain only letters and numbers that are easy to write down.
-	      Eight characters are enough for most cases.
 	      The question mark <span class='character'>?</span> at the end is optional, and
 	      is only needed if you must have "at least one 'symbol'".
 	      If there is a <span class='character'>0</span> then that's the number zero.</p>
 	  </em></p>
 	  <p><em>
 	      If you need to memorize your password, you might prefer
-	      a passphrase instead.  Three words is enough for most situations:
+	      a passphrase instead.
 	  </em></p>
 	  <p id="result2"></p>
 
 	  <p><em>
-	      And finally, if you want as few keystrokes as possible, you can
-	      use this. It encodes using a variation of "base64", and comes
-	      in useful if you need stronger passwords. It will always have at
-	      least one number, one symbol, one uppercase, and one lowercase letter.
+	      If you want as few keystrokes as possible, you can
+	      use this (but be careful with transcription errors):
 	  </em></p>
 	  <p id="result"></p>
 
@@ -387,8 +413,14 @@
 	      you can re-load the page.
 	  </em></p>
 
-	  <p><br/></p>
 	  <hr>
+
+	  <p>
+	    <label for="Entropy" id="entropy_explanation">Move slider to change strength of your password (entropy)</label><br/>
+	    <input type="range" name="entropy" id="entropy" min="24" max="160" step="1" value="40" class="slider"><br/>
+	    <i><output class="entropy-output" for="entropy"></output> bits</i>
+	  </p>
+
 	  <p><em>
 	      ADVANCED. The default settings above follow current
 	      best practices for most online situations: approximately
@@ -459,6 +491,44 @@
     </table> 
 
     <script>
+      let entropy_choice = 1;
+      let entropy_description = [
+	  /* 0 */ [24, 33, "24-30 bits: Acceptable for non-critical online services"],
+	  /* 1 */ [34, 46, "35-45 bits: Acceptable for online services, including important ones"],
+	  /* 2 */ [47, 56, "48-52 bits: Balanced choice for most uses"],
+	  /* 3 */ [57, 69, "60-65 bits: Strong"],
+	  /* 4 */ [70, 99, "75-90 bits: Very Strong"],
+	  /* 5 */ [100, 160, "120 bits and above: Probably overkill"]
+      ];
+
+      // manage slider
+      const entropy = document.querySelector('#entropy');
+      const output = document.querySelector('.entropy-output');
+      output.textContent = entropy.value;
+      let current_entropy = entropy.value | 0;
+      
+      document.getElementById("entropy_explanation").innerHTML = entropy_description[entropy_choice][2];
+
+      entropy.addEventListener('input', function() {
+	  var t = entropy.value;
+	  var t0 = entropy_choice;
+	  output.textContent = t;
+	  while (t < entropy_description[t0][0]) {
+	      t0--;
+	  }
+	  while (t > entropy_description[t0][1]) {
+	      t0++;
+	  }
+	  if (t0 != entropy_choice) {
+	      document.getElementById("entropy_explanation").innerHTML = entropy_description[t0][2];
+	      entropy_choice = t0;
+	  }
+	  if (current_entropy != entropy.value | 0) {
+	      current_entropy = entropy.value | 0;
+	      generate(true);
+	  }
+      });
+
       primelist=[2,3,5,7,11]
       primelistlen=primelist.length
       lastprime=11
@@ -468,7 +538,6 @@
       lasttime=0
       randomlist=[]
       passwords=[]
-
 
       // NOTE: we began adding a third source of entropy, by fetching
       //       from random.org, but ... that violates our design choice
@@ -607,7 +676,8 @@
       let limit_verify = 0;
       function verifyMustRules(candidatePW, omit_symbols) {
 	  limit_verify ++;
-	  if (limit_verify > 5000) {
+	  if (limit_verify > 500) {
+	      location.reload(true);
 	      throw 'there is a bug ... verifyMustRules() should not be called this much ...';
 	  }
 	  var mustuse=[];
@@ -634,10 +704,17 @@
 
       function generate(doit){
 	  if(seedcount<100) return;
+
 	  var numberofcodes=1*document.getElementById("numcodes").value
 
-	  var strlen32 = 1*document.getElementById("pwlen32").value;
-	  var strlen64 = 1*document.getElementById("pwlen64").value;
+	  // var strlen32 = 1*document.getElementById("pwlen32").value;
+	  var strlen32 = Math.ceil(current_entropy / 5.0);
+
+	  // var strlen64 = 1*document.getElementById("pwlen64").value;
+	  var strlen64 = Math.ceil(current_entropy / 6.0);
+
+	  // var wordCount=1*document.getElementById("phraseLength").value;
+	  var wordCount = Math.ceil(current_entropy / (Math.log(6**5)/Math.log(2)));
 
 	  var pw = "";
 
@@ -663,10 +740,9 @@
 		  // size of our dictionary
 		  const words_N = words2.length;
 		  var phrase = "";
-		  var wordCount=1*document.getElementById("phraseLength").value
 		  for(var b=0; b<wordCount; b++) {
 		      var n = rndNNN(words_N);
-		      phrase += words2[n]+"&nbsp;";
+		      phrase += words[n]+" ";
 		  }
 		  htmlstructure2+=`<span class='password'>${phrase}</span>`;
 
@@ -702,7 +778,7 @@
 
 	  document.getElementById("main").style.visibility = "visible";
 	  document.getElementById("generatebutton").value="Regenerate Passwords"
-	  document.getElementById("generateDescription").innerHTML = "<em>Here you go, good passwords at your service. Hit the button again if you need more.</em>"
+	  document.getElementById("generateDescription").innerHTML = "<em>Here you go! Hit the button again if you need more.</em>"
 
       }
 
