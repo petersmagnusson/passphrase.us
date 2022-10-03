@@ -111,3 +111,4 @@
     UPDATE: alternatively, you could pick one of @#$% randomly for and
     extra two bits of entropy, and also avoid the most common special
     characters generally used in passwords.
+    

@@ -394,10 +394,11 @@
 
 
 	  <p><em>
-	      We recommend the following password.
-	      It only uses simple letters and numbers (a <span class='character'>0</span>
+	      We recommend the following password. It has at least
+              one of each of lower case, upper case, number, and symbol.
+	      <!-- It only uses simple letters and numbers (a <span class='character'>0</span>
 	      is a zero and not the letter 'o').
-	      Note that it always ends with one 'symbol' (<span class='character'>@#$%</span>).
+	      Note that it always ends with one 'symbol' (<span class='character'>@#$%</span>).-->
 
 	  </em></p>
 
@@ -703,7 +704,7 @@
 	      throw 'there is a bug ... verifyMustRules() should not be called this much ...';
 	  }
 	  var mustuse=[];
-	  // note: this is complete, regardless of what's used
+	  // note: this is complete, regardless of what's used as dictionary
 	  mustuse[0] = "~!@#$%^&*()_+-=`[]{}\|;:'\",<.>/?";
 	  mustuse[1] = "0123456789";
 	  mustuse[2] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -742,7 +743,10 @@
 
 	  var pw = "";
 
-	  var library32 = "0123456789abcdefyhEjkLmnHpFrRTUW";
+	  // var library32 = "0123456789abcdefyhEjkLmnHpFrRTUW";
+          // experimenting with base32mi.v04
+          var library32 = "23456789bcdemnvwAFHKLPQY#$?!/+%&";
+
 	  var library64 = "#$%+/23456789=?@ABCDEFGHJKLMNPRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
 	  var htmlstructure="";
@@ -783,14 +787,23 @@
 		  // now the new base32mi version
 
 		  // (base32mi) passwords
+		  // do {
+		  //     // hardcode to 8
+		  //     pw = "";
+		  //     for (var b=0; b<strlen32; b++) {
+		  //         pw += library32[rnd32()];
+		  //     }
+ 		  //     pw += '@#$%'[rndNNN(4)];
+		  // } while (!verifyMustRules(pw, true));
+
 		  do {
 		      // hardcode to 8
 		      pw = "";
 		      for (var b=0; b<strlen32; b++) {
-			  pw += library32[rnd32()];
+		          pw += library32[rnd32()];
 		      }
- 		      pw += '@#$%'[rndNNN(4)];
 		  } while (!verifyMustRules(pw, true));
+
 		  htmlstructure4 += `<span class='password'>${pw}<\/span>`;
 
 	      }
