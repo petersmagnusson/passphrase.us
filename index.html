@@ -316,6 +316,7 @@
 		       "Dekar Regular", /* Android */
 		       "Menlo", /* iOS */
 		       monospace;
+                 letter-spacing: 1px;
 	  display:inline-block;
 	  margin:8px;
 	  padding:0px 2px;
@@ -706,13 +707,18 @@
 	      location.reload(true);
 	      throw 'there is a bug ... verifyMustRules() should not be called this much ...';
 	  }
+  	  var candLen = candidatePW.length;
+          if (candLen < 3) return false;
+          // first make sure (sigh) there are no repetitions
+          for (var i=0; i < candLen - 1; i++) {
+            if (candidatePW[i] == candidatePW[i+1]) return false;
+          }
 	  var mustuse=[];
 	  // note: this is complete, regardless of what's used as dictionary
 	  mustuse[0] = "~!@#$%^&*()_+-=`[]{}\|;:'\",<.>/?";
 	  mustuse[1] = "0123456789";
 	  mustuse[2] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	  mustuse[3] = "abcdefghijklmnopqrstuvwxyz";
-	  var candLen = candidatePW.length;
 	  for (var c = (omit_symbols ? 1 : 0); c < mustuse.length; c++) {
 	      var included=false
 	      for (var b=0; b<candLen; b++) {
@@ -744,7 +750,7 @@
 	  // var wordCount=1*document.getElementById("phraseLength").value;
 	  // var wordCount = Math.ceil(current_entropy / (Math.log(6**5)/Math.log(2)));
 	  var wordCount = Math.ceil(current_entropy / (Math.log(words2.length)/Math.log(2)));
-          console.log(Math.log(words2.length)/Math.log(2));
+          // console.log(Math.log(words2.length)/Math.log(2));
 
 	  var pw = "";
 
@@ -767,7 +773,7 @@
 			  pw += library64[rnd64()];
 		      }
 		  } while (!verifyMustRules(pw, false));
-		  htmlstructure += `<span class='password'>${pw}</span>`;
+		htmlstructure += `<span class='password'>&nbsp;${pw}&nbsp;</span>`;
 
 		  // now the passphrase  (first version)
 		  // size of our dictionary
@@ -777,7 +783,7 @@
 		      var n = rndNNN(words_N);
 		      phrase += words2[n]+" ";
 		  }
-		  htmlstructure2+=`<span class='password'>${phrase}</span>`;
+		  htmlstructure2+=`<span class='password'>&nbsp;${phrase}&nbsp;</span>`;
 
 		  // // now the passphrase  (second version, with some capitalization etc)
 		  // var phrase = ""
@@ -787,7 +793,7 @@
 		  //     phrase+=words[n]+"&nbsp;"
 		  // }
 		  // // TODO:  above not working yet
-		  // // htmlstructure3+="<span class='password'>"+phrase+"<\/span>"
+		  // // htmlstructure3+="<span class='password'>&nbsp;"+phrase+"&nbsp;<\/span>"
 
 		  // now the new base32mi version
 
@@ -809,7 +815,7 @@
 		      }
 		  } while (!verifyMustRules(pw, true));
 
-		  htmlstructure4 += `<span class='password'>${pw}<\/span>`;
+		  htmlstructure4 += `<span class='password'>&nbsp;${pw}&nbsp;<\/span>`;
 
 	      }
 	      document.getElementById("result").innerHTML=htmlstructure;
