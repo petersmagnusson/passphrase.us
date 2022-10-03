@@ -433,7 +433,7 @@
 
 	  <p>
 	    <em>
-	    <input type="range" name="entropy" id="entropy" min="24" max="160" step="1" value="39" class="slider"><br/>
+	    <input type="range" name="entropy" id="entropy" min="24" max="160" step="1" value="40" class="slider"><br/>
 	    <label for="Entropy" id="entropy_explanation">Move slider to change strength of your password (entropy)</label><br/>
 	    </em>
 	  </p>
@@ -695,7 +695,10 @@
       }
 
       // returns true if password conforms to common web site restrictions
-      // (naive implementation on purpose)
+      // (naive implementation on purpose). nota bene: this will restrict
+      // the actual entropy slightly. for current dictionary, we use base32mi.v04,
+      // where the four constraints would reduce by about one (1) bit of entropy from
+      // 40 to 39 in the case of the (recommended) 8-character password
       let limit_verify = 0;
       function verifyMustRules(candidatePW, omit_symbols) {
 	  limit_verify ++;
