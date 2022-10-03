@@ -433,7 +433,7 @@
 
 	  <p>
 	    <em>
-	    <input type="range" name="entropy" id="entropy" min="24" max="160" step="1" value="42" class="slider"><br/>
+	    <input type="range" name="entropy" id="entropy" min="24" max="160" step="1" value="39" class="slider"><br/>
 	    <label for="Entropy" id="entropy_explanation">Move slider to change strength of your password (entropy)</label><br/>
 	    </em>
 	  </p>
@@ -455,7 +455,7 @@
 	<div id="oldAdvanced" style="visibility:hidden;">
 	  <p><em>
 	      ADVANCED. The default settings above follow current
-	      best practices for most online situations: 42 bits of entropy,
+	      best practices for most online situations: 39 bits of entropy,
 	      picked by a machine rather than a human.
 	      That corresponds to eight 'base32' characters plus a symbol,
 	      or three words from our dictionary, or seven 'base64' characters.
@@ -731,7 +731,9 @@
 	  var numberofcodes=1*document.getElementById("numcodes").value
 
 	  // var strlen32 = 1*document.getElementById("pwlen32").value;
-          var strlen32 = Math.ceil((current_entropy - 2) / 5.0);
+          // var strlen32 = Math.ceil((current_entropy - 2) / 5.0);
+          // changing to no longer add 2 bits at the end
+          var strlen32 = Math.ceil((current_entropy) / 5.0);
 
 	  // var strlen64 = 1*document.getElementById("pwlen64").value;
 	  var strlen64 = Math.ceil(current_entropy / 6.0);
