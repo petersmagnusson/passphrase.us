@@ -29,7 +29,7 @@
        23456789
        bcdemnvw
        AFHKLPQY
-       #$?!/+%@
+       #$?!/+%@  note that "=" is available
 
     Part of the design intent is to encode some "error correction";
     thus the following substitutions (from "synonym" to "symbol")
@@ -69,16 +69,12 @@
        30       U       u v V            v only
        31       W       w                w only
                         
-
-    One drawback of the above design is it does NOT preserve ASCII lexical order.
-
     base32mi.v04 has 8 symbols, numerals, upper case, and lower case.
-
-
 
     Symbols are included, previous work up through v03 is included,
     but we avoid a few symbols that are occasional problems (notably
-    with various IBM or Oracle systems), namely: -.=@
+    with various IBM or Oracle systems), namely: -.=@, but in the
+    end we do go with @ as a better choice than &.
 
     This maximum spread of the 32 characters will maximize (*) the
     probability that a random string will contain at least one of
