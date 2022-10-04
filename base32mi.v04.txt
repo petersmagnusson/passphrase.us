@@ -29,7 +29,7 @@
        23456789
        bcdemnvw
        AFHKLPQY
-       #$?!/+%&
+       #$?!/+%@
 
     Part of the design intent is to encode some "error correction";
     thus the following substitutions (from "synonym" to "symbol")
