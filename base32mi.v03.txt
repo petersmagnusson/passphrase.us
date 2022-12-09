@@ -108,3 +108,7 @@
     we would recommend simply adding "?" at the end for any situation
     where the system requires a symbol.
 
+    UPDATE: alternatively, you could pick one of @#$% randomly for and
+    extra two bits of entropy, and also avoid the most common special
+    characters generally used in passwords.
+    
